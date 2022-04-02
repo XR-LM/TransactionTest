@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xkcoding.orm.mybatis.mapper.UserMapper">
+
+    <insert id="saveUser">
+        INSERT INTO `orm_user` (`name`,
+                                `password`,
+                                `salt`,
+                                `email`,
+                                `phone_number`,
+                                `status`,
+                                `create_time`,
+                                `last_login_time`,
+                                `last_update_time`)
+        VALUES (#{user.name},
+                #{user.password},
+                #{user.salt},
+                #{user.email},
+                #{user.phoneNumber},
+                #{user.status},
+                #{user.createTime},
+                #{user.lastLoginTime},
+                #{user.lastUpdateTime})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE
+        FROM `orm_user`
+        WHERE `id` = #{id}
+    </delete>
+    <sql id="test">
+        SELECT concat(name,'${@com.xkcoding.orm.mybatis.utils.BatisUtils@id}') as q FROM ${table_name}
+    </sql>
+    <select id="selectAllUser" resultType="com.xkcoding.orm.mybatis.entity.User">
+        <include refid="test">
+            <property name="table_name" value="orm_user"/>
+        </include>
+    </select>
+  <select id="selectUserByIds" resultType="com.xkcoding.orm.mybatis.entity.User">
+    select * from orm_user where id in
+    <foreach collection="userIds" item="id" separator="," index="idx" open="(" close=")">
+      #{id}
+    </foreach>
+  </select>
+</mapper>
